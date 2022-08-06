@@ -16,14 +16,6 @@ class CalculatorActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             CaculatorTheme {
-                // A surface container using the 'background' color from the theme
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colorScheme.background
-//                ) {
-//
-//
-//                }
                 Scaffold(modifier = Modifier.fillMaxSize()) {
                     Log.d("Calculator", "PaddingValues: $it")
                     Calculator()

@@ -68,7 +68,7 @@ fun Screen(modifier: Modifier, viewModel: CalculatorViewModel = viewModel()) {
         modifier
             .fillMaxSize()
             .padding(16.dp)
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(rememberScrollState(), reverseScrolling = true)
     ) {
         Text(
             text = text.value ?: "",
@@ -160,6 +160,7 @@ class CalculatorViewModel : ViewModel() {
     }
 
     fun onClick(key: Key) {
+        VibrateUtils.vibrate()
         when (key) {
             is key_Clear -> {
                 reset()
@@ -259,7 +260,7 @@ class CalculatorViewModel : ViewModel() {
         val left = BigDecimal(_stack.pop())
 
         val newValue = try {
-            when(op) {
+            when (op) {
                 Op_Plus.value -> left + right
                 Op_Minus.value -> left - right
                 Op_Times.value -> left * right
