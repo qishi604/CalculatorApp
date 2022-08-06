@@ -41,7 +41,7 @@ fun Calculator() {
     val landscape = width * 1f / height > 1.4
 
     if (landscape) {
-        Row {
+        Row(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
             Panel(modifier = Modifier.weight(3f))
             Screen(
                 modifier = Modifier
@@ -50,7 +50,7 @@ fun Calculator() {
         }
 
     } else {
-        Column {
+        Column(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
             Screen(
                 modifier = Modifier
                     .weight(2f)
@@ -146,7 +146,8 @@ fun OneRow(
 
 class CalculatorViewModel : ViewModel() {
 
-    private lateinit var _key: Key
+    /** Is Stack top Number */
+    private var _isNumber = true
 
     private val _textState: MutableLiveData<String> = MutableLiveData()
     val textState: LiveData<String> = _textState
@@ -167,10 +168,15 @@ class CalculatorViewModel : ViewModel() {
 
             is Key_Del -> {
                 val old = _stack.pop()
-                val newValue = when {
-                    old.length > 1 -> old.dropLast(1)
-                    else -> "0"
+                var newValue = old.dropLast(1)
+                if (newValue.isEmpty()) {
+                    newValue = if (_stack.size <= 0) {
+                        "0"
+                    } else {
+                        ""
+                    }
                 }
+
                 setNewValue(newValue)
                 return
             }
@@ -179,7 +185,7 @@ class CalculatorViewModel : ViewModel() {
             }
         }
 
-        if (_key is Num) {
+        if (_isNumber) {
             when (key) {
                 is Num -> {
                     val old = _stack.pop()
@@ -194,7 +200,6 @@ class CalculatorViewModel : ViewModel() {
                     }
 
                     setNewValue(newValue)
-                    _key = key
                 }
 
                 is Key_Rev -> {
@@ -218,13 +223,8 @@ class CalculatorViewModel : ViewModel() {
                 is Op -> {
                     if (_stack.size == 3) {
                         calResult()
-                        setNewValue(key.value)
-                        _key = key
-
-                    } else {
-                        setNewValue(key.value)
-                        _key  = key
                     }
+                    setNewValue(key.value, false)
                 }
 
                 else -> {
@@ -236,7 +236,10 @@ class CalculatorViewModel : ViewModel() {
             when (key) {
                 is Num -> {
                     setNewValue(key.value)
-                    _key = key
+                }
+                is Op -> {
+                    _stack.pop()
+                    setNewValue(key.value, false)
                 }
                 else -> {
                     // ignore
@@ -271,16 +274,20 @@ class CalculatorViewModel : ViewModel() {
         setNewValue(newValue.toString())
     }
 
-    private fun setNewValue(newValue: String) {
-        _stack.push(newValue)
+    private fun setNewValue(newValue: String?, isNumber: Boolean = true) {
+        if (!newValue.isNullOrEmpty()) {
+            _stack.push(newValue)
+        }
+        _isNumber = isNumber
+
         _textState.value = _stack.joinToString(" ")
     }
 
     private fun reset() {
-        _key = Num_0
+        _isNumber = true
         _stack.clear()
-        _stack.push(_key.value)
-        _textState.postValue(_key.value)
+        _stack.push(Num_0.value)
+        _textState.postValue(Num_0.value)
     }
 }
 
@@ -289,7 +296,11 @@ class CalculatorViewModel : ViewModel() {
 // region: Data
 sealed class Key(
     val value: String,
-)
+) {
+    override fun toString(): String {
+        return value
+    }
+}
 
 open class Num(value: String) : Key(value)
 
