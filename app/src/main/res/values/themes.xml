@@ -3,5 +3,10 @@
 
     <style name="Theme.Caculator" parent="android:Theme.Material.Light.NoActionBar" >
         <item name="android:fitsSystemWindows">false</item>
+
+        <item name="android:colorPrimary">@color/transparent</item>
+        <item name="android:colorSecondary" tools:targetApi="n_mr1">@color/transparent</item>
+        <item name="android:statusBarColor">@color/transparent</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 </resources>

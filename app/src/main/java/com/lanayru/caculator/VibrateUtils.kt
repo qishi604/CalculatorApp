@@ -10,8 +10,6 @@ object VibrateUtils {
 
     lateinit var _context: Application
 
-
-
     fun setup(app: Application) {
         _context = app
     }
@@ -20,12 +18,8 @@ object VibrateUtils {
         (_context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator)?.let { vibrator ->
             val mills = 10L
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                vibrator.vibrate(
-                    VibrationEffect.createOneShot(
-                        mills,
-                        VibrationEffect.DEFAULT_AMPLITUDE
-                    )
-                )
+                val effect = VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK)
+                vibrator.vibrate(effect)
             } else {
                 vibrator.vibrate(mills)
             }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.MaterialTheme
@@ -15,11 +16,13 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LiveData
@@ -66,6 +69,7 @@ fun Screen(modifier: Modifier, viewModel: CalculatorViewModel = viewModel()) {
     Box(
         modifier =
         modifier
+            .background(MaterialTheme.colorScheme.onBackground)
             .fillMaxSize()
             .padding(16.dp)
             .verticalScroll(rememberScrollState(), reverseScrolling = true)
@@ -74,7 +78,7 @@ fun Screen(modifier: Modifier, viewModel: CalculatorViewModel = viewModel()) {
             text = text.value ?: "",
             modifier = Modifier.align(Alignment.CenterEnd),
             style = TextStyle(
-                MaterialTheme.colorScheme.primary, fontSize = 48.sp, fontWeight = FontWeight.Bold,
+                MaterialTheme.colorScheme.onPrimary, fontSize = 48.sp, fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.End
             )
         )
@@ -108,14 +112,25 @@ fun OneRow(
 ) {
     Row(modifier = modifier) {
         symbols.forEach { key ->
-            val fontSize = if (key is Num) 24.sp else 20.sp
+            val fontSize: TextUnit
+            val itemColor : Color
+            val fontColor : Color
+            if (key is Num || key is Key_Rev) {
+                fontSize = 24.sp
+                itemColor = MaterialTheme.colorScheme.secondary
+                fontColor = MaterialTheme.colorScheme.onPrimary
+            } else {
+                fontSize = 20.sp
+                itemColor = MaterialTheme.colorScheme.tertiary
+                fontColor = MaterialTheme.colorScheme.onTertiary
+            }
 
             Box(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxSize()
                     .padding(1.dp)
-                    .background(MaterialTheme.colorScheme.onPrimary)
+                    .background(itemColor)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = rememberRipple()
@@ -130,7 +145,7 @@ fun OneRow(
                         .align(Alignment.Center),
 
                     style = TextStyle(
-                        MaterialTheme.colorScheme.primary, fontSize = fontSize,
+                        fontColor, fontSize = fontSize,
                         fontWeight = FontWeight.Medium,
                         textAlign = TextAlign.Center
                     )

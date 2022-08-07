@@ -13,29 +13,18 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Color.Black,
-//    background = Color.Black,
-//    secondary = PurpleGrey80,
-//    tertiary = Pink80,
+    primary = Color(0xFF161616),
+    background = Color(0xFF161616),
+    onBackground = Color(0xFF2B2B2B),
+    secondary = Color(0xFF606060),
+    tertiary = Color(0xFFF2A33C),
 
-)
-
-private val LightColorScheme = lightColorScheme(
-//    primary = Color(0xFFFFFBFE),
-//    secondary = PurpleGrey40,
-//    tertiary = Pink40,
-//    background = Color(0xFFFFFBFE),
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
     onPrimary = Color.White,
-    onSecondary = Color.White,
+    onSecondary = Color(0xFF333333),
     onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
 )
+
+private val LightColorScheme = DarkColorScheme
 
 @Composable
 fun CaculatorTheme(
