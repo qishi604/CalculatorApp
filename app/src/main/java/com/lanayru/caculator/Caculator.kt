@@ -88,7 +88,10 @@ fun Screen(modifier: Modifier, viewModel: CalculatorViewModel = viewModel()) {
 
 @Composable
 fun Panel(modifier: Modifier) {
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(1.dp)
+    ) {
         EachRow(step = 4) { list ->
             OneRow(list, modifier = Modifier.weight(1f))
         }
@@ -110,11 +113,14 @@ fun OneRow(
     modifier: Modifier,
     viewModel: CalculatorViewModel = viewModel()
 ) {
-    Row(modifier = modifier) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(1.dp)
+    ) {
         symbols.forEach { key ->
             val fontSize: TextUnit
-            val itemColor : Color
-            val fontColor : Color
+            val itemColor: Color
+            val fontColor: Color
             if (key is Num || key is Key_Rev) {
                 fontSize = 24.sp
                 itemColor = MaterialTheme.colorScheme.secondary
@@ -129,7 +135,6 @@ fun OneRow(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxSize()
-                    .padding(1.dp)
                     .background(itemColor)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
@@ -137,9 +142,7 @@ fun OneRow(
                     ) {
                         viewModel.onClick(key)
                     },
-
-
-                ) {
+            ) {
                 Text(
                     text = key.value, modifier = Modifier
                         .align(Alignment.Center),
